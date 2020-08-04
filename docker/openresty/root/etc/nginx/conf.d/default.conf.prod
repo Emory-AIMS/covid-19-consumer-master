@@ -1,0 +1,84 @@
+lua_package_path '/usr/local/openresty/lualib/lua_scripts/covid19/?.lua;;';
+##
+
+server {
+
+    listen      80;
+    server_name _;
+    resolver local=on ipv6=off;
+
+    error_page 403 = @403 ;
+    location @403 {
+        access_log  /var/log/nginx/access.log json_access;
+        return 403 '{"data":"Forbidden."}' ;
+    }
+
+    error_page 401 = @401 ;
+    location @401 {
+        access_log  /var/log/nginx/access.log json_access;
+        return 401 '{"data":"Authorization Required."}' ;
+    }
+
+    error_page 404 = @404 ;
+    location @404 {
+        access_log  /var/log/nginx/access.log json_access;
+        return 404 '{"data":"Not Found."}' ;
+    }
+
+    location / {
+        access_log  /var/log/nginx/access.log json_access;
+        return 404 '{"data":"Not Found."}';
+    }
+
+    location = /ping {
+        limit_except GET {
+            deny all;
+        }
+        access_log  /var/log/nginx/ping.log json_ping;
+        return 200 '{"data":"Pong..."}';
+    }
+
+    location = /interaction/report {
+       limit_except POST {
+           deny all;
+       }
+       access_by_lua_file '/usr/local/openresty/lualib/lua_scripts/covid19/postdata_access.lua';
+
+       # this proxypass is needed to allow nginx to serve static content on POST request ( Method rewrite )
+       # and to allow to log body response content ( only allowed with proxy pass )
+       access_log  /var/log/nginx/coronaviruscheck.org/postdata.log postdata;
+       proxy_method GET;
+       proxy_pass http://localhost:81;
+   }
+
+    location = /device/handshake {
+       lua_ssl_trusted_certificate '/etc/ssl/certs/ca-certificates.crt';
+       client_max_body_size 1m;
+       client_body_buffer_size 1m;
+       error_log /var/log/nginx/error.log warn;
+       default_type 'application/json';
+       limit_except POST {
+           deny all;
+       }
+       content_by_lua_file '/usr/local/openresty/lualib/lua_scripts/covid19/handshake.lua';
+    }
+
+    location = /device {
+       limit_except PUT {
+           deny all;
+       }
+       error_log /var/log/nginx/error.log warn;
+       default_type 'application/json';
+       content_by_lua_file '/usr/local/openresty/lualib/lua_scripts/covid19/update_device.lua';
+    }
+
+}
+
+server {
+    listen 81;
+    server_name _;
+    location = /interaction/report {
+        access_log off;
+        return 200 '{"next_try":600,"location":false}';
+    }
+}

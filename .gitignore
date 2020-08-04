@@ -1,0 +1,17 @@
+# Created by .ignore support plugin (hsz.mobi)
+### Example user template template
+### Example user template
+
+# IntelliJ project files
+.idea
+*.iml
+out
+gen
+.idea/
+/lua-5.3.5/
+.DS_Store
+*logs/*
+/docker/ansible_deploy/venv/
+/docker/ansible_deploy/hosts
+/docker/ansible_deploy/gitlab-registry.login.yml
+/docker/.env.*
