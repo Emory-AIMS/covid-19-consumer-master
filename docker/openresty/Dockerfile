@@ -44,6 +44,7 @@ RUN mkdir -p /root/.aws/ && echo "[default]" > /root/.aws/credentials && \
 
 RUN mkdir -p /var/log/nginx/coronaviruscheck.org
 RUN touch /var/log/nginx/coronaviruscheck.org/postdata.log
+RUN touch /var/log/nginx/patientstatus.log
 VOLUME [ "/var/log/nginx/", "/usr/local/openresty/lualib/lua_scripts/" ]
 
 ENTRYPOINT [ "/init" ]

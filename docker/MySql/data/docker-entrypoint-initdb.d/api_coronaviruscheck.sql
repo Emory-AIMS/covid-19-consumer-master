@@ -36,6 +36,17 @@ CREATE TABLE IF NOT EXISTS `patient_statuses`
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_0900_ai_ci;
 
+CREATE TABLE IF NOT EXISTS `infected_devices`
+(
+    `device_id`    int       NOT NULL,
+    `infection_timestamp`    timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `last_analysis_timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `healed_timestamp` timestamp,
+    PRIMARY KEY (`device_id`)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4
+  COLLATE = utf8mb4_0900_ai_ci;
+
 
 
 

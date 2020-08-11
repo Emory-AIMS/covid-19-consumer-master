@@ -13,7 +13,7 @@ if not status then
     return json_request;
 end
 
-if json_request.id and json_request.id == auth_jwt.id then
+if json_request.device_id and json_request.device_id == auth_jwt.id then
 
     local mysql = Mysql:new();
     local db, conn_err, conn_err_code, connect_sqlstate = mysql:connect();
@@ -22,8 +22,8 @@ if json_request.id and json_request.id == auth_jwt.id then
         return mysql:mysqlError(conn_err, conn_err_code, connect_sqlstate);
     end
 
-    local id = ngx.quote_sql_str(json_request.id);
-    local new_status = ngx.quote_sql_str(json_request.new_status);
+    local id = ngx.quote_sql_str(json_request.device_id);
+    local new_status = ngx.quote_sql_str(json_request.status);
     
     -- find old status
     local query = "SELECT p1.* FROM patient_statuses p1 INNER JOIN"

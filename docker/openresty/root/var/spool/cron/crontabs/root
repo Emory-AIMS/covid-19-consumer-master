@@ -1,4 +1,4 @@
-
-*/6 * * * * /usr/sbin/logrotate /etc/logrotate.d/interaction-logger.conf
+*/5 * * * * /usr/sbin/logrotate -f /etc/logrotate.d/interaction-logger.conf
+*/5 * * * * /usr/sbin/logrotate -f /etc/logrotate.d/status-logger.conf
 # leave an empty line
 
