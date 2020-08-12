@@ -1,4 +1,3 @@
 */5 * * * * /usr/sbin/logrotate -f /etc/logrotate.d/interaction-logger.conf
-*/5 * * * * /usr/sbin/logrotate -f /etc/logrotate.d/status-logger.conf
+*/5 * * * * /usr/sbin/logrotate -f -s /var/lib/logrotate/status-logger.state /etc/logrotate.d/status-logger.conf
 # leave an empty line
-
